@@ -1,0 +1,61 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Algebra",
+        "repositoryURL": "https://github.com/typelift/Algebra.git",
+        "state": {
+          "branch": null,
+          "revision": "e81a20aa543dd0847897b57073a3f939c2124375",
+          "version": "0.2.0"
+        }
+      },
+      {
+        "package": "DoctorPretty",
+        "repositoryURL": "https://github.com/bkase/DoctorPretty.git",
+        "state": {
+          "branch": null,
+          "revision": "7e1b0fea76e8e81d5e08ccd603d6bbcbdad9931c",
+          "version": "0.4.1"
+        }
+      },
+      {
+        "package": "FileCheck",
+        "repositoryURL": "https://github.com/trill-lang/FileCheck.git",
+        "state": {
+          "branch": null,
+          "revision": "1c966580c83cf2e41be802992d46fe2edfc5c95f",
+          "version": "0.0.5"
+        }
+      },
+      {
+        "package": "Operadics",
+        "repositoryURL": "https://github.com/typelift/Operadics.git",
+        "state": {
+          "branch": null,
+          "revision": "c2a14919b3653a39a9bf268c1ae0bf71ad6833fe",
+          "version": "0.3.0"
+        }
+      },
+      {
+        "package": "SwiftCheck",
+        "repositoryURL": "https://github.com/typelift/SwiftCheck.git",
+        "state": {
+          "branch": null,
+          "revision": "df82fb889864945c64458f38846702af729b3ee4",
+          "version": "0.9.1"
+        }
+      },
+      {
+        "package": "Swiftx",
+        "repositoryURL": "https://github.com/typelift/Swiftx.git",
+        "state": {
+          "branch": null,
+          "revision": "140f1510ecb8597970c58c5a41a32bda72310d31",
+          "version": "0.6.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

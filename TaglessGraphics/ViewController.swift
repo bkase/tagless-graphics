@@ -17,6 +17,12 @@ protocol Drawing {
     static func alpha(_ alpha: CGFloat, _ child: Self) -> Self
 }
 
+extension Sequence where Iterator.Element: Drawing {
+    var combined: Iterator.Element {
+        return .combined(Array(self))
+    }
+}
+
 // We can draw in a CGContext:
 struct CGraphics {
     let draw: (CGContext) -> ()
