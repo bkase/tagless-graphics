@@ -36,6 +36,82 @@ extension CGContext {
     }
 }
 
+enum Svg {
+    case node(name: String, args: [String: String], children: [Svg])
+    case fragment([Svg])
+    
+    private func _render() -> String {
+        switch self {
+        case let .node(name, args, children):
+            let nodePreamble = "<\(name) " + args.map{ k, v in "\(k)=\"\(v)\"" }.joined(separator: " ")
+            if children.count == 0 {
+                return nodePreamble + "/>"
+            } else {
+                return nodePreamble + ">\n" + children.map{ $0._render() }.joined(separator: "\n") + "\n" + "</\(name)>"
+            }
+        case let .fragment(nodes):
+            return nodes.map { $0._render() }.joined(separator: "\n")
+        }
+    }
+    
+    /// Top-level render call that wraps the svg nodes in a <svg> tag
+    func render(canvas: (width: Int, height: Int)) -> String {
+        return Svg.node(
+            name: "svg",
+            args: ["width": String(describing: canvas.width), "height": String(describing: canvas.height)],
+            children: [self]
+        )._render()
+    }
+}
+extension UIColor {
+    var redValue: CGFloat{ return CIColor(color: self).red }
+    var greenValue: CGFloat{ return CIColor(color: self).green }
+    var blueValue: CGFloat{ return CIColor(color: self).blue }
+    var alphaValue: CGFloat{ return CIColor(color: self).alpha }
+
+    var rgb: String {
+        return "rgb(\(Int(255 * redValue)), \(Int(255 * greenValue)), \(Int(255 * blueValue)))"
+    }
+}
+extension Svg: Drawing {
+    static func rectangle(_ rect: CGRect, fill: UIColor) -> Svg {
+        return .node(
+            name: "rect",
+            args: [
+                "x": String(describing: rect.origin.x),
+                "y": String(describing: rect.origin.y),
+                "width": String(describing: rect.width),
+                "height": String(describing: rect.height),
+                "fill": fill.rgb
+            ],
+            children: []
+        )
+    }
+    
+    static func ellipse(in rect: CGRect, fill: UIColor) -> Svg {
+        return .node(
+            name: "ellipse",
+            args: [
+                "x": String(describing: rect.origin.x),
+                "y": String(describing: rect.origin.y),
+                "rx": String(describing: rect.width),
+                "ry": String(describing: rect.height),
+                "fill": fill.rgb
+            ],
+            children: []
+        )
+    }
+    
+    static func combined(_ layers: [Svg]) -> Svg {
+        return .fragment(layers)
+    }
+    
+    static func alpha(_ alpha: CGFloat, _ child: Svg) -> Svg {
+        // TODO: Need to make Svg aware of fill color, then this could modify the color to `rgba` instead of rgb
+        fatalError("Todo")
+    }
+}
+
 extension CGraphics: Drawing {
     static func rectangle(_ rect: CGRect, fill: UIColor) -> CGraphics {
         return CGraphics { context in
@@ -215,16 +291,23 @@ class ViewController: UIViewController {
     let iv = UIImageView()
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(iv)
+        //view.addSubview(iv)
+        let wv = UIWebView(frame: self.view.bounds)
+        let svg: Svg = sample()
+        let html = svg.render(canvas: (width: 300, height: 500))
+        
+        wv.loadHTMLString("<html>" + html + "</html>", baseURL: nil)
+        wv.reload()
+        view.addSubview(wv)
     }
     
-    override func viewWillAppear(_ animated: Bool) {        
-        iv.frame = view.bounds
+    override func viewWillAppear(_ animated: Bool) {
+        /*iv.frame = view.bounds
         let renderer = UIGraphicsImageRenderer(bounds: view.bounds)
         iv.image = renderer.image { context in
             let drawing: CGraphics = sample2()
             drawing.draw(context.cgContext)
-        }        
+        } */
     }
 }
 
